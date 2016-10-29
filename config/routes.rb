@@ -1,9 +1,16 @@
 Rails.application.routes.draw do
-  resources :sensors
+
   resources :sensor_values
+  resources :regions
   resources :sensors do
        resources :sensor_values
   end
+  resources :regions do
+       resources :sensors
+  end
+  
+  post '/register' => 'sensor_values#register', via: [:post], defaults: { format: :json }
+  
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

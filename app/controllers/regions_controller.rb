@@ -10,6 +10,7 @@ class RegionsController < ApplicationController
   # GET /regions/1
   # GET /regions/1.json
   def show
+    
   end
 
   # GET /regions/new
@@ -28,6 +29,14 @@ class RegionsController < ApplicationController
 
     respond_to do |format|
       if @region.save
+        sensor = Sensor.new
+        sensor.name = 'AISUSAHIHSA'
+        sensor.save # adding save here
+        
+        sensor1 = Sensor.new
+        sensor1.name = '22222'
+        sensor1.save # adding save here
+        
         format.html { redirect_to @region, notice: 'Region was successfully created.' }
         format.json { render :show, status: :created, location: @region }
       else
