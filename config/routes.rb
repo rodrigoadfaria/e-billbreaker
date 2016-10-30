@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   end
   
   post '/register' => 'sensor_values#register', via: [:post], defaults: { format: :json }
+  get '/charts' => 'sensor_values#charts', via: [:get]
   
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

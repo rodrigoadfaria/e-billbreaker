@@ -5,12 +5,36 @@ class SensorValuesController < ApplicationController
   # GET /regions
   # GET /regions.json
   def index
-    @sensor_values = SensorValue.all.includes(:sensor)
+    @sensor_values = SensorValue.all.includes(:sensor).order(:date)#.limit(100)
+    
+    resources = {}
+    @sensor_values.each do |data|
+      resource = resources[data.sensor.name] || {}
+      
+      resource['sensor_name'] = data.sensor.name
+      resource['lat'] = data.sensor.region.lat
+      resource['lng'] = data.sensor.region.lng
+      
+      value = {}
+      value['value'] = data.value
+      value['date'] = data.date
+
+      values = resource['values'] || []
+      values << value
+      resource['values'] = values
+
+      resources[data.sensor.name] = resource
+    end
+    
+    render json: { resources: resources.values }
   end
 
   # GET /regions/1
   # GET /regions/1.json
   def show
+  end
+
+  def charts
   end
 
   def register
@@ -21,6 +45,8 @@ class SensorValuesController < ApplicationController
     if not @region
       @region = Region.new
       @region.name = data[:region_name]
+      @region.lat = data[:region_lat]
+      @region.lng = data[:region_lng]
       @region.save # adding save here
     end
     
@@ -36,7 +62,7 @@ class SensorValuesController < ApplicationController
     
     @sensorvalue = SensorValue.new
     @sensorvalue.value = data[:value]
-    @sensorvalue.date = Date.parse(data[:date])
+    @sensorvalue.date = DateTime.parse(data[:date])
     @sensorvalue.sensor = @sensor
     @sensorvalue.save # adding save here    
     
