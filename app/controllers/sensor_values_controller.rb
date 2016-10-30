@@ -5,7 +5,25 @@ class SensorValuesController < ApplicationController
   # GET /regions
   # GET /regions.json
   def index
-    @sensor_values = SensorValue.all.includes(:sensor).order(:date)#.limit(100)
+    zoom = params['zoom']
+    number_of_entries = session['number_of_entries'] || 300
+    if zoom
+      if zoom == 'in'
+        number_of_entries -= 100
+      else
+        number_of_entries += 100
+      end
+    end
+
+    # we are using at least 300 entries as default
+    if number_of_entries < 300
+      number_of_entries = 300
+    end
+    session['number_of_entries'] = number_of_entries
+
+    @sensor_values = SensorValue.all.includes(:sensor)
+                                    .order(:date)
+                                    .last(number_of_entries)
     
     resources = {}
     @sensor_values.each do |data|

@@ -1,14 +1,24 @@
-//google.charts.load('current', {'packages':['line']});
-//google.charts.setOnLoadCallback(drawChart);
 
 $(document).ready(function() {
     updateChart();
     setInterval(updateChart, 5000);
+    
+    $('#in').on("click", function() {
+        updateChart('in');
+    });
+
+    $('#out').on("click", function() {
+        updateChart('out');
+    });
 });
 
-function updateChart() {
+function updateChart(zoom) {
+    var route = 'https://edx-ruby-rails-rodrigoadfaria-1.c9users.io/sensor_values/'
+    if (zoom)
+        route += '?zoom='+ zoom;
+
     $.ajax({
-        url: 'https://edx-ruby-rails-rodrigoadfaria-1.c9users.io/sensor_values/',
+        url: route,
         complete : function() {
             // do nothing
         },
@@ -37,7 +47,7 @@ function drawChart(sensor_values) {
   var options = {
     chart: {
       title: 'Leitor de Consumo',
-      subtitle: 'medida em Watt'
+      subtitle: 'Medida em Watt'
     },
     width: 900,
     height: 500,
