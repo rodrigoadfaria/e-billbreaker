@@ -20,7 +20,7 @@ function updateChart() {
 
 function drawChart(sensor_values) {
   var data = new google.visualization.DataTable();
-  data.addColumn('date', 'Dia');
+  data.addColumn('datetime', 'Horário');
   
   var resources = sensor_values.resources;
   for (i = 0; i < resources.length; i++) {
@@ -29,10 +29,10 @@ function drawChart(sensor_values) {
       
       for (j = 0; j < resource.values.length; j++) {
           var s_value = resource.values[j];
-          console.log(s_value);
           data.addRows([[new Date(s_value.date),  s_value.value]]);
       }
   }
+  
 
   var options = {
     chart: {
